@@ -14,9 +14,9 @@
     <style>
     .friends { border:1px solid #ddd; border-radius:10px; width:200px; min-height:50px; float:left; margin:10px; }
     .tweets { border:1px solid #ddd; border-radius:10px; width:350px; min-height:50px; float:left; margin:10px; }
-    .name { margin:0 5px; }
-    .createdAt { font-size:8px; }
-    .tweets ul li { margin:10px 0; }
+    .name { margin:0 5px; color:#999; }
+    .createdAt { font-size:12px; }
+    .tweets ul li { margin:10px 0; list-style-type: none; }
     
     </style>
     <div class="friends">
@@ -88,7 +88,7 @@
         //poll for messages
         setInterval(function(){
           refresh();
-        }, 2000);
+        }, 1000);
         
       });
 
