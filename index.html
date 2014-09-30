@@ -6,8 +6,8 @@
   </head>
   <body>
     <script>
-
-      $(document).ready(function(){
+    // updates messages from server
+    function refresh_messages(){
         var $body = $('body');
         $body.html('');
 
@@ -18,8 +18,15 @@
           $tweet.text('@' + tweet.user + ': ' + tweet.message);
           $tweet.appendTo($body);
           index -= 1;
-        }
+        }    
+    }
 
+      $(document).ready(function(){
+    
+        // polls message
+        setInterval(function(){
+          refresh_messages();
+        }, 3000);
       });
 
     </script>
