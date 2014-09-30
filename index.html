@@ -14,9 +14,12 @@
     <style>
     .friends { border:1px solid #ddd; border-radius:10px; width:200px; min-height:50px; float:left; margin:10px; }
     .tweets { border:1px solid #ddd; border-radius:10px; width:350px; min-height:50px; float:left; margin:10px; }
-    .name { margin:0 5px; color:#999; }
+    .name { margin-right:8px; color:#999; }
     .createdAt { font-size:12px; }
-    .tweets ul li { margin:10px 0; list-style-type: none; }
+    .tweets ul li { margin:10px 0; list-style-type:none; display:none; }
+    .friends ul li { margin:10px 0; list-style-type:none; }
+    .friends ul { padding-left:20px; }
+    .friends ul li a { text-decoration:none; }
     
     </style>
     <div class="friends">
@@ -42,15 +45,20 @@
       }
       
       
-      var last=0; //last message displayed        
+      var last=0; //last message displayed
+      var limit=6;        
       
       function refresh(){
         $ul = $('.tweets ul');
         var count = streams.home.length;
 
         for(i=last; i<count; i++){
+          //remove last
+          var $list = $('.tweets ul li');
+          if($list.length > limit)
+            $('.tweets ul li:last-child').remove();          
+        
           var tweet = streams.home[i];
-          
           var sdate = tweet.created_at.toString();
           sdate = sdate.substring(0, sdate.indexOf('GMT')); 
           
@@ -58,11 +66,13 @@
               panel += '<span class="name">@' + tweet.user + '</span>';
               panel += '<span class="createdAt">' + sdate + '</span>';
               panel += '<div>' + tweet.message + '</div>';
-          var $li = $('<li style="display:none;">').append($(panel));
+          var $li = $('<li>').append($(panel));
           $ul.prepend($li);
-          $li.fadeIn();  
+          $li.fadeIn(1500);  
         }
         last = count;
+        
+        //limit entries
       }
       
       
@@ -79,7 +89,7 @@
         //list users
         $ul = $('.friends ul');
         $.each(users, function(i, val){
-          var $li = $('<li>').append(val);
+          var $li = $('<li><a href="#">@' + val + '</a></li>');
           $ul.append($li);
         });
         $('.friends').append($ul)
@@ -88,7 +98,7 @@
         //poll for messages
         setInterval(function(){
           refresh();
-        }, 1000);
+        }, 2000);
         
       });
 
