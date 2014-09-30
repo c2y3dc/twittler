@@ -15,18 +15,20 @@
         while(index >= 0){
           var tweet = streams.home[index];
           var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
+          $tweet.text('@' + tweet.user + ': ' + tweet.message + ' ['+ tweet.created_at + ']');
           $tweet.appendTo($body);
           index -= 1;
         }    
     }
 
       $(document).ready(function(){
-    
+
         // polls message
         setInterval(function(){
           refresh_messages();
         }, 3000);
+
+
       });
 
     </script>
