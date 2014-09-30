@@ -13,9 +13,10 @@
     
     <style>
     .friends { border:1px solid #ddd; border-radius:10px; width:200px; min-height:50px; float:left; margin:10px; }
-    .tweets { border:1px solid #ddd; border-radius:10px; width:300px; min-height:50px; float:left; margin:10px; }
+    .tweets { border:1px solid #ddd; border-radius:10px; width:350px; min-height:50px; float:left; margin:10px; }
     .name { margin:0 5px; }
     .createdAt { font-size:8px; }
+    .tweets ul li { margin:10px 0; }
     
     </style>
     <div class="friends">
@@ -49,9 +50,13 @@
 
         for(i=last; i<count; i++){
           var tweet = streams.home[i];
+          
+          var sdate = tweet.created_at.toString();
+          sdate = sdate.substring(0, sdate.indexOf('GMT')); 
+          
           var panel = '<div>';
-              panel += '<span class="name">' + tweet.user + '</span>';
-              panel += '<span class="createdAt">' + tweet.created_at + '</span>';
+              panel += '<span class="name">@' + tweet.user + '</span>';
+              panel += '<span class="createdAt">' + sdate + '</span>';
               panel += '<div>' + tweet.message + '</div>';
           var $li = $('<li style="display:none;">').append($(panel));
           $ul.prepend($li);
@@ -83,7 +88,7 @@
         //poll for messages
         setInterval(function(){
           refresh();
-        }, 1000);
+        }, 2000);
         
       });
 
