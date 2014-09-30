@@ -5,12 +5,31 @@
     <script src="data_generator.js"></script>
   </head>
   <body>
-    <script>
-    // updates messages from server
-    function refresh_messages(){
-        var $body = $('body');
-        $body.html('');
+    <div id = "backDrop">
+      <div id="tweets"><h2>Tweets</h3>
+        <ul class="tweetList"></ul>
+      </div>
+    </div>
+    
+    <style>
+    .friends { border:1px solid #ddd; border-radius:10px; width:200px; min-height:50px; float:left; margin:10px; }
+    .tweets { border:1px solid #ddd; border-radius:10px; width:300px; min-height:50px; float:left; margin:10px; }
+    .name { margin:0 5px; }
+    .createdAt { font-size:8px; }
+    
+    </style>
+    <div class="friends">
+      <ul />
+    </div>
+    
+    <div class="tweets">
+      <ul />
+    </div>
 
+    <script>
+      // updates messages from server
+      function refresh_messages(){
+        var $body = $('body');
         var index = streams.home.length - 1;
         while(index >= 0){
           var tweet = streams.home[index];
@@ -19,16 +38,53 @@
           $tweet.appendTo($body);
           index -= 1;
         }    
-    }
+      }
+      
+      
+      var last=0; //last message displayed        
+      
+      function refresh(){
+        $ul = $('.tweets ul');
+        var count = streams.home.length;
+
+        for(i=last; i<count; i++){
+          var tweet = streams.home[i];
+          var panel = '<div>';
+              panel += '<span class="name">' + tweet.user + '</span>';
+              panel += '<span class="createdAt">' + tweet.created_at + '</span>';
+              panel += '<div>' + tweet.message + '</div>';
+          var $li = $('<li style="display:none;">').append($(panel));
+          $ul.prepend($li);
+          $li.fadeIn();  
+        }
+        last = count;
+      }
+      
+      
+      
 
       $(document).ready(function(){
-
         // polls message
+        /*
         setInterval(function(){
           refresh_messages();
         }, 3000);
+        */
+        
+        //list users
+        $ul = $('.friends ul');
+        $.each(users, function(i, val){
+          var $li = $('<li>').append(val);
+          $ul.append($li);
+        });
+        $('.friends').append($ul)
 
-
+        
+        //poll for messages
+        setInterval(function(){
+          refresh();
+        }, 1000);
+        
       });
 
     </script>
