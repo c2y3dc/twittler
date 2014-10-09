@@ -21,6 +21,8 @@
     .friends ul { padding-left:20px; }
     .friends ul li a { text-decoration:none; }
     
+    .bold { font-weight:bold; }
+    
     </style>
     <div class="friends">
       <ul />
@@ -47,28 +49,35 @@
       
       var last=0; //last message displayed
       var limit=6;        
+      var userfilter = '';
       
       function refresh(){
         $ul = $('.tweets ul');
         var count = streams.home.length;
 
         for(i=last; i<count; i++){
-          //remove last
-          var $list = $('.tweets ul li');
-          if($list.length > limit)
-            $('.tweets ul li:last-child').remove();          
-        
           var tweet = streams.home[i];
-          var sdate = tweet.created_at.toString();
-          sdate = sdate.substring(0, sdate.indexOf('GMT')); 
           
-          var panel = '<div>';
-              panel += '<span class="name">@' + tweet.user + '</span>';
-              panel += '<span class="createdAt">' + sdate + '</span>';
-              panel += '<div>' + tweet.message + '</div>';
-          var $li = $('<li>').append($(panel));
-          $ul.prepend($li);
-          $li.fadeIn(1500);  
+          if(tweet.user == userfilter || !userfilter){
+            //remove last
+            var $list = $('.tweets ul li');
+            if($list.length > limit)
+              $('.tweets ul li:last-child').remove();
+
+            //display tweet
+            var sdate = tweet.created_at.toString();
+            sdate = sdate.substring(0, sdate.indexOf('GMT')); 
+            
+            var panel = '<div>';
+                panel += '<span class="name">@' + tweet.user + '</span>';
+                panel += '<span class="createdAt">' + sdate + '</span>';
+                panel += '<div>' + tweet.message + '</div>';
+                panel += '</div>';
+            var $mypanel = $(panel); 
+            var $li = $('<li>').append($mypanel);
+            $ul.prepend($li);
+            $li.fadeIn(1500);
+          }
         }
         last = count;
         
@@ -79,12 +88,6 @@
       
 
       $(document).ready(function(){
-        // polls message
-        /*
-        setInterval(function(){
-          refresh_messages();
-        }, 3000);
-        */
         
         //list users
         $ul = $('.friends ul');
@@ -92,13 +95,34 @@
           var $li = $('<li><a href="#">@' + val + '</a></li>');
           $ul.append($li);
         });
-        $('.friends').append($ul)
+        $('.friends').append($ul);
 
+        //bind click event to filter users        
+        $('.friends ul a').click(function(){
         
+           $('.friends ul a').removeClass();  //remove all classes for all
+           $(this).addClass('bold');  //add 'bold' to this anchor
+        
+           var name = $(this).text();
+           name = name.substring(1, name.length);
+           userfilter = name;
+           //console.log(name);
+        });
+        
+        // add a clear link
+        $clear = $('<li><a href="#" id="clear">[clear]</a></li>');
+        $ul.append($clear);
+
+        //bind clear        
+        $('#clear').click(function(){
+           userfilter = '';
+           $('.friends ul a').removeClass();  //remove all classes for all
+        });
+       
         //poll for messages
         setInterval(function(){
           refresh();
-        }, 2000);
+        }, 500);
         
       });
 
